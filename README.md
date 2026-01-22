@@ -4,7 +4,7 @@ A fully functional basic calculator web application with a clean, user-friendly 
 
 ## Preview
 
-![Calculator Demo](./demo.gif)
+![Calculator Demo](./docs/demo.gif)
 
 ## Features
 
