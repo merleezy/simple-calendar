@@ -32,34 +32,41 @@ grid.addEventListener("click", (e) => {
 });
 
 function handleNumber(num) {
+  const MAX_LENGTH = 15;
+
   if (num === ".") {
     if (currentValue.includes(".")) return;
 
     currentValue = currentValue === "0" ? "0." : currentValue + ".";
     return;
   }
+  if (currentValue.length > MAX_LENGTH) return;
+
   currentValue = currentValue === "0" ? num : currentValue + num;
 }
 
 function handleOperator(op) {
-  if (op === "+/-") {
-    if (currentValue !== "0") {
-      currentValue = currentValue.startsWith("-")
-        ? currentValue.slice(1)
-        : "-" + currentValue;
-    }
-    return;
-  }
+  if (op === "+/-") return toggleSign();
+  if (op === "=") return executeCalculation();
 
-  if (op === "=") {
-    calculate();
-    justCalculated = true;
-    operator = "";
-    previousValue = "";
-    return;
-  }
+  // If we reach this point, it's a standard operator
+  chainOperation(op);
+}
 
-  if (previousValue !== "" && operator !== "") {
+function toggleSign() {
+  currentValue = String(-parseFloat(currentValue));
+}
+
+function executeCalculation() {
+  if (!operator) return;
+  calculate();
+  justCalculated = true;
+  operator = "";
+  previousValue = "";
+}
+
+function chainOperation(nextOp) {
+  if (previousValue && operator) {
     calculate();
   }
 
@@ -68,7 +75,7 @@ function handleOperator(op) {
     currentValue = "0";
   }
 
-  operator = op;
+  operator = nextOp;
   justCalculated = false;
 }
 
@@ -99,6 +106,7 @@ function calculate() {
 
   currentValue = String(parseFloat(result.toFixed(10)));
 
+  // Convert to exponential if too long
   if (currentValue.replace("-", "").replace(".", "").length > 17) {
     currentValue = parseFloat(result).toExponential(6);
   }
