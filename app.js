@@ -33,9 +33,9 @@ grid.addEventListener("click", (e) => {
 
 function handleNumber(num) {
   if (num === ".") {
-    if (!currentValue.includes(".")) {
-      currentValue = currentValue === "0" ? "0." : currentValue + ".";
-    }
+    if (currentValue.includes(".")) return;
+
+    currentValue = currentValue === "0" ? "0." : currentValue + ".";
     return;
   }
   currentValue = currentValue === "0" ? num : currentValue + num;
